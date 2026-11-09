@@ -1,24 +1,30 @@
-img.gitaur{
+img#gitaur{
   position: absolute;
   bottom: 80px;
   left: 22%;
   width: 10%;
 }
-img.flute{
+img#flute{
   position: absolute;
   bottom: 80px;
   left: 35%;
   width: 10%;
 }
-img.glock{
+img#glock{
   position: absolute;
   bottom: 80px;
   right: 35%;
   width: 10%;
 }
-img.mic{
+img#mic{
   position: absolute;
   bottom: 80px;
+  right: 22%;
+  width: 10%;
+}
+img.beat{
+  position: absolute;
+  bottom: 0;
   right: 22%;
   width: 10%;
 }
