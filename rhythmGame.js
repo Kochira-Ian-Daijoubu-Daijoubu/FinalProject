@@ -17,18 +17,23 @@ function brodcast(){
     }
 };
 
-spawnBeat()
+setInterval(spawnBeat(), 40)
 
 function keyup(){
     keyIsPressed = false;
 }
 
-
 function spawnBeat(){
     var beat = document.createElement("img");
-    beat.style.left = 22%
-    beat.style.width = 10%
-    beat.style.down = 0%
-    beat.src = "katakana_82_e_small.png.png"
+    beat.id = "beat";
+    beat.style.position = "absolute";
+    beat.style.left = "22%";
+    beat.style.width = "10%";
+    beat.style.down = "0%";
+    beat.src = "katakana_82_e_small.png.png";
     document.body.appendChild(beat);
+    for (let d = 0; d < 97; d++) {
+        document.getElementById("beat").style.down = d + "%";
+    } 
 }
+
