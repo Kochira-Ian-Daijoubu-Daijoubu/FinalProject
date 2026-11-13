@@ -1,39 +1,59 @@
-var keyIsPressed = false;
-document.body.addEventListener("keydown", brodcast);
-document.body.addEventListener("keyup", keyup);
-function brodcast(){
-    if (keyIsPressed == false){
-        if (event.code == "KeyZ"){
-            beatHit("z");
-        } else if (event.code == "KeyX"){
-            beatHit("x");
-        } else if (event.code == "KeyN"){
-            beatHit("c");
-        } else if (event.code == "KeyM"){
-            beatHit("v");
-        }
-        
-        keyIsPressed = true;
+var notePlacement = ["22%", "35%", "55%", "68%"];
+var notesHit = [0, 0, 0, 0];
+var notesHitable = [0, 0, 0, 0];
+document.addEventListener("keydown", brodcast);
+
+function brodcast(event){
+    if (event.repeat) return;
+    if (event.code == "KeyZ"){
+        beatHit(0);
+    } else if (event.code == "KeyX"){
+        beatHit(1);
+    } else if (event.code == "KeyN"){
+        beatHit(2);
+    } else if (event.code == "KeyM"){
+        beatHit(3);
     }
 };
-
-setInterval(spawnBeat(), 40)
-
-function keyup(){
-    keyIsPressed = false;
+function beatHit(beat){
+    console.log(beat)
 }
 
-function spawnBeat(){
+function hitable(placement){
+    let hitInterval = setInterval(function() {notesHitable[placement] = 1; clearInterval(hitInterval);}, 5)
+}
+
+spawnBeat(0, 0);
+spawnBeat(1, 1);
+spawnBeat(2, 2);
+spawnBeat(3, 3);
+
+function spawnBeat(id, placement){
     var beat = document.createElement("img");
-    beat.id = "beat";
+    beat.id = id + "beat";
     beat.style.position = "absolute";
-    beat.style.left = "22%";
+    beat.style.left = notePlacement[placement];
     beat.style.width = "10%";
-    beat.style.down = "0%";
+    beat.style.top = "100%";
     beat.src = "katakana_82_e_small.png.png";
     document.body.appendChild(beat);
-    for (let d = 0; d < 97; d++) {
-        document.getElementById("beat").style.down = d + "%";
-    } 
+    fallBeat(id + "beat", placement);
+    
 }
 
+function fallBeat(beat, placement) {
+    let d = 0;
+    let fallInterval = setInterval(function(){
+    if(d < 100){
+        d++;
+        document.getElementById(beat).style.top = d + "%"; 
+        if(d > 65 && d < 75){
+            console.log("Note " + placement + " can now be hit!");
+            hitable(placement);
+        }
+    } else {
+        clearInterval(fallInterval);
+        document.getElementById(beat).remove();
+    }
+    }, 12)
+}
