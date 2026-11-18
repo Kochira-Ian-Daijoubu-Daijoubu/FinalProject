@@ -1,6 +1,6 @@
 var notePlacement = ["22%", "35%", "55%", "68%"];
-var notesHit = [0, 0, 0, 0];
 var notesHitable = [0, 0, 0, 0];
+var score = 0;
 document.addEventListener("keydown", brodcast);
 
 function brodcast(event){
@@ -17,11 +17,20 @@ function brodcast(event){
 };
 function beatHit(beat){
     console.log(beat)
+    document.getElementById("hitAudio" + beat).play();
+    document.getElementById("hitAudio" + beat).currentTime = 0;
+    if (notesHitable[beat] == 1) {
+        score = score + 50;
+        document.getElementById("score").textContent = "score: " + score;
+    }
 }
 
 function hitable(placement){
     let hitInterval = setInterval(function() {notesHitable[placement] = 1; clearInterval(hitInterval);}, 5)
 }
+
+fetch("HaoChart.json")
+    .then(data => console.log(data))
 
 spawnBeat(0, 0);
 spawnBeat(1, 1);
