@@ -1,6 +1,12 @@
 var notePlacement = ["22%", "35%", "55%", "68%"];
-var notesHit = [0, 0, 0, 0];
 var notesHitable = [0, 0, 0, 0];
+var score = 0;
+var chart = [];
+var notes = [];
+var timing = [];
+var gameClock = 0;
+var delay = 0.3;
+var upcomingNote = 0;
 document.addEventListener("keydown", brodcast);
 
 function brodcast(event){
@@ -17,16 +23,53 @@ function brodcast(event){
 };
 function beatHit(beat){
     console.log(beat)
+    document.getElementById("hitAudio" + beat).play();
+    document.getElementById("hitAudio" + beat).currentTime = 0;
+    if (notesHitable[beat] == 1) {
+        score = score + 50;
+        document.getElementById("score").textContent = "score: " + score;
+    }
 }
 
 function hitable(placement){
     let hitInterval = setInterval(function() {notesHitable[placement] = 1; clearInterval(hitInterval);}, 5)
 }
 
-spawnBeat(0, 0);
-spawnBeat(1, 1);
-spawnBeat(2, 2);
-spawnBeat(3, 3);
+fetch("HaoChart.json")
+    .then(res => res.json()) 
+    .then(json => { 
+        chart = json; 
+        console.log(chart);
+    });
+
+document.addEventListener("click", prepare, {once: true});
+
+function prepare(){
+    document.getElementById("song").play() 
+    for(let i = 0; i < chart.tracks[0].notes.length; i++){
+        notes.push(chart.tracks[0].notes[i].midi);
+        notes[i] = notes[i] - 60;
+        timing.push(chart.tracks[0].notes[i].time);
+        timing[i] = timing[i];
+    }
+    gameStart();
+};
+
+//Claude AI made this clock...gomennasai
+function gameStart(){
+    const song = document.getElementById("song");
+
+    function tick(){
+        gameClock = song.currentTime;
+
+        while(timing[upcomingNote] - delay <= gameClock){
+            spawnBeat(upcomingNote, notes[upcomingNote])
+            upcomingNote++
+        }
+        requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
 
 function spawnBeat(id, placement){
     var beat = document.createElement("img");
@@ -52,8 +95,9 @@ function fallBeat(beat, placement) {
             hitable(placement);
         }
     } else {
+        notesHitable[placement] = 0;
         clearInterval(fallInterval);
         document.getElementById(beat).remove();
     }
-    }, 12)
+    }, 3)
 }
