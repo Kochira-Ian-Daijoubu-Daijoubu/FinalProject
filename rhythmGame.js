@@ -5,7 +5,7 @@ var chart = [];
 var notes = [];
 var timing = [];
 var gameClock = 0;
-var delay = 0.3;
+var delay = 0.84;
 var upcomingNote = 0;
 document.addEventListener("keydown", brodcast);
 
@@ -51,6 +51,7 @@ function prepare(){
         notes[i] = notes[i] - 60;
         timing.push(chart.tracks[0].notes[i].time);
         timing[i] = timing[i];
+
     }
     gameStart();
 };
@@ -99,5 +100,5 @@ function fallBeat(beat, placement) {
         clearInterval(fallInterval);
         document.getElementById(beat).remove();
     }
-    }, 3)
+    }, 12)
 }
